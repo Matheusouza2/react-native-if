@@ -1,12 +1,57 @@
+/* //marcio.matheus@univasf.edu.br
 import { CameraView, useCameraPermissions } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
 import { useRef, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function CameraComponent() {
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
   const [foto, setFotoUri] = useState(null);
+  const [mediaPermission, requestMediaPermission] =
+    MediaLibrary.usePermissions();
+
+  const tirarFoto = async () => {
+    if (cameraRef.current) {
+      try {
+        const albuns = await MediaLibrary.getAlbumsAsync();
+
+        let meuAlbum = albuns.find((a) => a.title === "MinhasFotos");
+
+        const novaFoto = await cameraRef.current.takePictureAsync();
+
+        const asset = await MediaLibrary.createAssetAsync(
+          novaFoto.uri,
+          meuAlbum
+        );
+
+        if (!meuAlbum) {
+          meuAlbum = await MediaLibrary.createAlbumAsync(
+            "MinhasFotos",
+            asset,
+            false
+          );
+        }
+
+        Alert.alert("Sucesso", `Foto salva com sucesso no caminho ${meuAlbum}`);
+      } catch (error) {
+        console.log(error);
+        Alert.alert("Erro", "Não foi possivel salvar a foto");
+      }
+    }
+  };
+
+  function toggleFacing() {
+    setFacing((current) => (current === "back" ? "front" : "back"));
+  }
 
   if (!permission) {
     return (
@@ -16,26 +61,19 @@ export default function CameraComponent() {
     );
   }
 
-  if (!permission.granted) {
+  if (!permission?.granted || !mediaPermission?.granted) {
     return (
-      <View>
+      <View style={styles.centered}>
         <Text>Você precisa fornecer a permissão de acesso</Text>
         <TouchableOpacity onPress={requestPermission}>
           <Text>Conceder Permissão</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={requestMediaPermission}>
+          <Text>Conceder Permissão aos albuns</Text>
+        </TouchableOpacity>
       </View>
     );
-  }
-
-  const tirarFoto = async () => {
-    if (cameraRef.current) {
-      const novaFoto = await cameraRef.current.takePictureAsync();
-      setFotoUri(novaFoto.uri);
-    }
-  };
-
-  function toggleFacing() {
-    setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
   if (foto) {
@@ -105,3 +143,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+ */

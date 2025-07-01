@@ -1,4 +1,4 @@
-import * as Location from "expo-location";
+/* import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -63,3 +63,4 @@ const styles = StyleSheet.create({
   },
   map: { flex: 1 },
 });
+ */
